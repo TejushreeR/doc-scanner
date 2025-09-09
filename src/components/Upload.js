@@ -5,7 +5,7 @@ import { storage, db } from "../firebase";
 import * as pdfjsLib from "pdfjs-dist";
 import { autoCrop } from "../utils/autoCrop";
 
-// PDF.js worker
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
 function Upload({ userId }) {
@@ -14,7 +14,7 @@ function Upload({ userId }) {
   const [afterURL, setAfterURL] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Convert PDF first page or image file to HTMLImageElement
+
   const handleFileChange = async (e) => {
     const f = e.target.files[0];
     if (!f) return;
@@ -46,7 +46,7 @@ function Upload({ userId }) {
 
     setFile(imageFile);
     setBeforeURL(previewURL);
-    setAfterURL(null); // reset previous crop
+    setAfterURL(null); 
     setLoading(false);
   };
 
@@ -55,22 +55,21 @@ function Upload({ userId }) {
     setLoading(true);
 
     try {
-      // Auto-crop image using OpenCV.js
+
       const croppedFile = await autoCrop(file, true);
 
-      // Upload original
+
       const origRef = ref(storage, `uploads/original/${file.name}`);
       await uploadBytes(origRef, file);
       const origURL = await getDownloadURL(origRef);
 
-      // Upload cropped
+
       const cropRef = ref(storage, `uploads/cropped/${croppedFile.name}`);
       await uploadBytes(cropRef, croppedFile);
       const cropURL = await getDownloadURL(cropRef);
 
       setAfterURL(cropURL);
 
-      // Save metadata to Firestore
       await addDoc(collection(db, "uploads"), {
         userId,
         filename: file.name,
