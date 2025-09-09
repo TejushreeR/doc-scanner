@@ -11,15 +11,15 @@ export default function Login() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setMessage("✅ Logged in successfully!");
+      setMessage("Logged in successfully!");
     } catch (error) {
-      setMessage("❌ " + error.message);
+      setMessage("Error " + error.message);
     }
   };
 
   const handleLogout = async () => {
     await signOut(auth);
-    setMessage("👋 Logged out.");
+    setMessage(" Logged out.");
   };
 
   return (
