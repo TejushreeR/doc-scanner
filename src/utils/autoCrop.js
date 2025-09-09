@@ -1,6 +1,6 @@
 /* global cv */
 
-// Helper: load image from File
+
 export const loadImage = (file) => {
   return new Promise((resolve) => {
     const img = new Image();
@@ -13,7 +13,7 @@ export const autoCrop = async (file, debug = false) => {
   const img = await loadImage(file);
   const mat = cv.imread(img);
 
-  // --- Preprocess ---
+
   const gray = new cv.Mat();
   cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY);
 
@@ -34,7 +34,7 @@ export const autoCrop = async (file, debug = false) => {
   const edged = new cv.Mat();
   cv.Canny(thresh, edged, 50, 150);
 
-  // --- Find contours ---
+ 
   const contours = new cv.MatVector();
   const hierarchy = new cv.Mat();
   cv.findContours(
@@ -71,7 +71,7 @@ export const autoCrop = async (file, debug = false) => {
 
   let dst;
   if (docCnt) {
-    // --- Perspective transform (crop) ---
+   
     const data = docCnt.data32S;
     const pts = [
       { x: data[0], y: data[1] },
@@ -80,7 +80,7 @@ export const autoCrop = async (file, debug = false) => {
       { x: data[6], y: data[7] },
     ];
 
-    // Order points
+
     pts.sort((a, b) => a.y - b.y);
     const top = pts.slice(0, 2).sort((a, b) => a.x - b.x);
     const bottom = pts.slice(2, 4).sort((a, b) => a.x - b.x);
@@ -146,10 +146,10 @@ export const autoCrop = async (file, debug = false) => {
       rotMat.delete();
     }
   } else {
-    dst = mat.clone(); // fallback
+    dst = mat.clone(); 
   }
 
-  // --- Debug visualization ---
+ 
   if (debug) {
     const matDebug = mat.clone();
     const colorAll = new cv.Scalar(0, 255, 0, 255);
@@ -180,7 +180,7 @@ export const autoCrop = async (file, debug = false) => {
     matDebug.delete();
   }
 
-  // --- Convert result to File ---
+
   const canvas = document.createElement("canvas");
   cv.imshow(canvas, dst);
 
@@ -196,7 +196,7 @@ export const autoCrop = async (file, debug = false) => {
     )
   );
 
-  // --- Cleanup ---
+  
   mat.delete();
   gray.delete();
   thresh.delete();
