@@ -11,9 +11,9 @@ export default function Signup() {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      setMessage("✅ Signup successful! You can now login.");
+      setMessage("Signup successful! You can now login.");
     } catch (error) {
-      setMessage("❌ " + error.message);
+      setMessage("Error " + error.message);
     }
   };
 
